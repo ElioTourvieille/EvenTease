@@ -6,7 +6,7 @@ const Footer = () => {
     return (
         <footer className="w-full flex justify-center flex-wrap font-semibold bg-jet">
             <div className="w-full flex flex-row justify-between">
-                <img className="w-1/5 h-auto p-8" src={logoBW} alt={'logo'}/>
+                <img className="w-1/5 h-auto py-8 pl-24" src={logoBW} alt={'logo'}/>
                 <div className="flex items-center justify-end w-full p-6">
                     <motion.a href='/'
                               target={"_blank"}

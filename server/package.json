@@ -7,7 +7,7 @@
     "start": "node backend/server.js",
     "dev": "nodemon backend/server.js"
   },
-  "author": "Julien Ramirez",
+  "author": "Eric Tourvieille",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
