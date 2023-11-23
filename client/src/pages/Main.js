@@ -24,7 +24,7 @@ const Main = () => {
                         ))}
                     </div>
                 ) : (
-                    <h3 className="text-2xl"></h3>
+                    <h3 className="text-2xl">OK</h3>
                 )}
             </section>
         </main>
