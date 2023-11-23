@@ -1,4 +1,5 @@
 import {Link} from "react-router-dom";
+import {motion} from "framer-motion";
 
 // Components
 import AnimatedText from "../components/AnimatedText";
@@ -10,13 +11,32 @@ import mainImg from "../assets/img/celebration.png";
 import {LuBellRing} from "react-icons/lu";
 import {BiCalendarCheck, BiMailSend} from "react-icons/bi";
 import {IoPeopleSharp} from "react-icons/io5";
-
 const Home = () => {
+
+    const start = {
+        initial: {
+            opacity: 0,
+        },
+        animate:{
+            opacity: 1,
+            transition: {
+                duration: 1.2,
+                delay:  0.3,
+            }
+        }
+    }
+
     return (
         <main>
-            <section className="flex justify-evenly my-24 px-8 py-12">
-                <img src={mainImg} alt="Image principale de célébration" className='w-1/4 h-auto outline-none xl:inline-block sm:hidden xs:hidden'
+            <section className="flex justify-evenly my-16 px-8 py-10">
+                <motion.div className=''
+                            variants={start}
+                            initial="initial"
+                            animate="animate"
+                >
+                <img src={mainImg} alt="Image principale de célébration" className='w-full h-auto outline-none xl:inline-block sm:hidden xs:hidden'
                      loading="eager"/>
+                </motion.div>
                 <div className="flex flex-col justify-center items-center text-center">
                     <AnimatedText text="Célébrez avec EventEase !"/>
                     <p className="font-normal text-2xl max-w-xl my-10">
