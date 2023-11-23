@@ -3,22 +3,6 @@ module.exports = {
   content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
-      screens: {
-        '2xl': '1280px',
-        // => @media (min-width: 1280px) { ... }
-
-        'xl': '1024px',
-        // => @media (min-width: 1024px) { ... }
-
-        'lg': '768px',
-        // => @media (min-width: 768px) { ... }
-
-        'md': '640px',
-        // => @media (min-width: 640px) { ... }
-
-        'sm': '300px',
-        // => @media (min-width: 300px) { ... }
-      },
       colors: {
         jet: "#282828",
         smoke: "#F5F5F5",
@@ -26,6 +10,25 @@ module.exports = {
         phlox: "#E02AFF",
         azure: "#0080FF",
       },
+    },
+    screens: {
+      '2xl': {max: '1535px'},
+      // => @media (max-width: 1535px) { ... }
+
+      'xl': {max: '1279px'},
+      // => @media (max-width: 1279px) { ... }
+
+      'lg': {max: '1023px'},
+      // => @media (max-width: 1023px) { ... }
+
+      'md': {max: '767px'},
+      // => @media (max-width: 767px) { ... }
+
+      'sm': {max: '639px'},
+      // => @media (max-width: 639px) { ... }
+
+      'xs': {max: '375px'},
+      // => @media (max-width: 375px) { ... }
     },
   },
 

@@ -1,17 +1,20 @@
 {
-  "name": "mern_final_backend",
+  "name": "eventease_backend",
   "version": "1.0.0",
-  "description": "API REST for a mern stack tutorial",
+  "description": "API REST",
   "main": "server.js",
   "scripts": {
-    "start": "node backend/server.js",
-    "dev": "nodemon backend/server.js"
+    "start": "node server/server.js",
+    "server": "nodemon server/server.js",
+    "dev": "concurrently \"nodemon server.js\" \"cd ../client && npm start\""
   },
   "author": "Eric Tourvieille",
   "license": "MIT",
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "colors": "^1.4.0",
+    "concurrently": "^8.2.2",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "express-async-handler": "^1.2.0",

@@ -2,14 +2,15 @@ const asyncHandler = require("express-async-handler")
 const UsersModel = require("../models/usersModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
+const {Error} = require("mongoose");
 
 // @desc    Register new user
 // @route   POST /api/users
 // @access  Public
 const registerUser = asyncHandler( async(req, res) => {
-    const { first_name, last_name, email, password} = req.body
+    const { first_name, last_name, email, password, est_name, est_type, user_type } = req.body
 
-    if (!first_name || !last_name || !email || !password) {
+    if (!first_name || !last_name || !email || !password || !est_name) {
         res.status(400)
         throw new Error("Merci de remplir tous les champs")
     }
@@ -30,14 +31,20 @@ const registerUser = asyncHandler( async(req, res) => {
         first_name,
         last_name,
         email,
-        password: hashedPassword
+        password: hashedPassword,
+        est_name,
+        est_type,
+        user_type
     })
+
     if (user) {
         res.status(201).json({
             _id: user.id,
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
+            est_name: user.est_name,
+            user_type: user.user_type,
             token: generateToken(user._id)
         })
     } else {
@@ -63,12 +70,15 @@ const loginUser = asyncHandler(async (req, res) => {
             first_name: user.first_name,
             last_name: user.last_name,
             email: user.email,
+            est_name: user.est_name,
+            user_type: user.user_type,
             token: generateToken(user._id)
         })
     } else {
         res.status(400)
         throw new Error("Email ou mot de passe incorrect")
     }
+
 })
 
 // @desc    Get user data

@@ -1,6 +1,10 @@
-import AnimatedText from "../components/AnimatedText";
-import mainImg from "../assets/img/celebration.png";
 import {Link} from "react-router-dom";
+
+// Components
+import AnimatedText from "../components/AnimatedText";
+
+//Assets
+import mainImg from "../assets/img/celebration.png";
 
 // Icons
 import {LuBellRing} from "react-icons/lu";
@@ -11,7 +15,7 @@ const Home = () => {
     return (
         <main>
             <section className="flex justify-evenly my-24 px-8 py-12">
-                <img src={mainImg} alt="" className='w-1/4 h-auto outline-none xl:inline-block sm:hidden xs:hidden'
+                <img src={mainImg} alt="Image principale de célébration" className='w-1/4 h-auto outline-none xl:inline-block sm:hidden xs:hidden'
                      loading="eager"/>
                 <div className="flex flex-col justify-center items-center text-center">
                     <AnimatedText text="Célébrez avec EventEase !"/>
