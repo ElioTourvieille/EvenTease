@@ -2,7 +2,6 @@ const asyncHandler = require("express-async-handler")
 const UsersModel = require("../models/usersModel")
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs")
-const {Error} = require("mongoose");
 
 // @desc    Register new user
 // @route   POST /api/users
@@ -85,7 +84,7 @@ const loginUser = asyncHandler(async (req, res) => {
 // @route   GET /api/users/me
 // @access  Private
 const getUser = asyncHandler(async (req, res) => {
-    const { _id, first_name, last_name, email } = await UsersModel.findById(req.user.id) // ID vient du token
+    const { _id, first_name, last_name, email } = await UsersModel.findById(req.user.id) // ID from token
     res.status(200).json({
         _id,
         first_name,

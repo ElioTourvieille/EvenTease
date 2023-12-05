@@ -18,7 +18,7 @@ const Error404 = () => {
     }
 
     return (
-        <main className="w-full h-[100vh] flex justify-center items-center">
+        <main className="w-full h-[100dvh] flex justify-center items-center">
             <motion.div className="w-1/2 text-center px-8"
                         initial={{x: '-150%',width:'50%'}}
                         animate={{x: "0%", width: '50%'}}

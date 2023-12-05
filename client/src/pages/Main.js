@@ -1,31 +1,54 @@
 import AnimatedText from "../components/AnimatedText";
 import EventItem from "../components/EventItem";
-import * as events from "events";
+
+import {useDispatch, useSelector} from "react-redux";
+import {useEffect, useState} from "react";
+import {toast} from "react-toastify";
+import {getAllEvents, reset} from "../features/events/eventsSlice";
+import FilterBar from "../components/FilterBar";
 
 const Main = () => {
+
+    const dispatch = useDispatch();
+    const { events, isLoading, isListing, isError, message } = useSelector((state) => state.events)
+    const { user } = useSelector((state) => state.auth);
+
+    // Create a state to store the active filter
+    const [activeFilter, setActiveFilter] = useState('Tous')
+
+    useEffect(() => {
+        if(isError) {
+            toast.error(message)
+        } else {
+            if (Array.isArray(events) && events.length === 0) {
+                dispatch(getAllEvents())
+            }
+        }
+    }, [events, isError, message, isListing, dispatch]);
+
+    const handleFilter = (filter) => {
+        setActiveFilter(filter)
+    }
+
+    //Create a new array of events filtered by the active filter
+    const filteredEvents = events.filter((event) => {
+        return activeFilter === 'Tous' || event.type === activeFilter;
+    })
+
     return (
         <main className="bg-smoke px-32 py-16">
             <AnimatedText text="Les évènements à venir" />
 
-            <div className="flex justify-start gap-16 my-12">
-                <span className="text-lg font-medium cursor-pointer">Tous</span>
-                <span className="text-lg font-medium cursor-pointer">Conférence</span>
-                <span className="text-lg font-medium cursor-pointer">Team Building</span>
-                <span className="text-lg font-medium cursor-pointer">Apéritif</span>
-                <span className="text-lg font-medium cursor-pointer">Autres</span>
-            </div>
+            <FilterBar activeFilter={activeFilter} onFilterClick={handleFilter}/>
 
             <section className='flex justify-center mt-16'>
-                <EventItem />
-                {events.length > 0 ? (
-                    <div className='goals'>
-                        {events.map((event) => (
-                            <EventItem event={event} key={event._id} />
+                {filteredEvents.length > 0 ? (
+                    <div className="flex flex-col gap-y-12">
+                        {filteredEvents.map((event) => (
+                            <EventItem event={event} key={event._id} user={user} est_name={user.est_name} />
                         ))}
                     </div>
-                ) : (
-                    <h3 className="text-2xl">OK</h3>
-                )}
+                ) : null}
             </section>
         </main>
     );

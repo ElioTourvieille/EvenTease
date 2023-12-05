@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import {useEffect, useState} from 'react';
 import logo from "../assets/img/eventease-logo.png";
 import {login, reset} from "../features/auth/authSlice";
 import {toast} from "react-toastify";
@@ -42,7 +42,7 @@ const Login = () => {
 
         const userData = {
             email,
-            password
+            password,
         }
         dispatch(login(userData))
     }

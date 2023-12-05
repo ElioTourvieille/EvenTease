@@ -8,8 +8,6 @@ const NavBar = () => {
 
     const user = useSelector((state) => state.auth.user);
 
-    console.log(user)
-
     return (
         <header className="font-semibold text-lg text-azure px-8">
             <nav className="w-full flex justify-between p-12">

@@ -15,8 +15,8 @@ import Error404 from "../pages/Error404";
 import Main from "../pages/Main";
 import CreateEvent from "../pages/CreateEvent";
 
-
 function App() {
+
     return (
         <>
           <Router>
