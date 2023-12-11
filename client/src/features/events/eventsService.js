@@ -12,13 +12,13 @@ const createEvent = async (eventData) => {
         return response.data;
     } catch (error) {
         if (error.response) {
-            // La requête a été faite, mais le serveur a répondu avec un code d'erreur
+            // The request was made and the server responded with a status code
             console.error(error.response.data);
         } else if (error.request) {
-            // La requête a été faite, mais aucune réponse n'a été reçue
+            // The request was made but no response was received
             console.error(error.request);
         } else {
-            // Une erreur s'est produite lors de la configuration de la requête
+            // A error occurred
             console.error('Error', error.message);
         }
     }
@@ -31,7 +31,7 @@ const getAllEvents = async () => {
 
 const getUserEvent = async (token) => {
     const config = {
-        headers:{
+        headers: {
             Authorization: `Bearer ${token}`
         }
     }
@@ -39,9 +39,35 @@ const getUserEvent = async (token) => {
     return response.data;
 }
 
+const participateInEvent = async (eventId, token) => {
+    const config = {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    }
+    const response = await axios.post(API_URL + `${eventId}`+ '/participate', null, config)
+    try {
+        if (response.data) {
+            localStorage.setItem('event', JSON.stringify(response.data));
+        }
+        return response.data;
+    } catch (error) {
+        if (error.response) {
+            // The request was made and the server responded with a status code
+            console.error(error.response.data);
+        } else if (error.request) {
+            // The request was made but no response was received
+            console.error(error.request);
+        } else {
+            // A error occurred
+            console.error('Error', error.message);
+        }
+    }
+}
+
 const deleteEvent = async (eventId, token) => {
     const config = {
-        headers:{
+        headers: {
             Authorization: `Bearer ${token}`
         }
     }
@@ -53,7 +79,8 @@ const eventsService = {
     createEvent,
     getAllEvents,
     getUserEvent,
-    deleteEvent
+    deleteEvent,
+    participateInEvent
 }
 
 export default eventsService;

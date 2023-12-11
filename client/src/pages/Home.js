@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {Bounce, Fade, Roll, Slide} from "react-awesome-reveal";
+import {Bounce, Fade, Slide} from "react-awesome-reveal";
 
 // Components
 import AnimatedText from "../components/AnimatedText";
@@ -58,7 +58,7 @@ const Home = () => {
                 </div>
 
                 <Slide direction="right" triggerOnce>
-                <div className="w-[90%] flex gap-36 justify-center flex-wrap mt-12">
+                <div className="w-full flex gap-36 justify-center flex-wrap mt-12">
 
                     <div className="w-[30%] border-secondary">
                         <span className="w-full h-full flex flex-col justify-center bg-white rounded-lg px-6">

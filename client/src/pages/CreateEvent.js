@@ -4,6 +4,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {createEvent, reset} from "../features/events/eventsSlice";
+import axios from "axios";
 
 const CreateEvent = () => {
 
@@ -16,6 +17,7 @@ const CreateEvent = () => {
     })
     const [type, setType] = useState('Team Building')
     const [invitation, setInvitation] = useState('Ouvert à tous')
+    const [file, setFile] = useState()
 
     const { user } = useSelector((state) => state.auth)
 
@@ -25,7 +27,6 @@ const CreateEvent = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log(isSuccess, isError, message)
         if(isSuccess) {
             toast.success(`L'évènement "${title}" a bien été créé.` )
             navigate('/main')
@@ -52,6 +53,14 @@ const CreateEvent = () => {
         setType(e.target.value)
     }
 
+    const upload = () => {
+        const formData = new FormData()
+        formData.append('file', file)
+        axios.post('http://localhost:3001/upload', formData)
+            .then(res => {})
+            .catch(err => console.log(err))
+    }
+
     const onSubmit = (e) => {
         e.preventDefault()
 
@@ -70,6 +79,7 @@ const CreateEvent = () => {
             picture: picture ? picture : null,
             user: user._id,
             est_name: user.est_name,
+            participants: []
         }
 
         dispatch(createEvent(eventData))
@@ -160,11 +170,14 @@ const CreateEvent = () => {
 
                         <div className="w-full flex justify-end hover:scale-105 ease-in">
                             <div className="w-2/3 text-center border border-azure rounded-lg py-[1rem] px-2 relative cursor-pointer">
-                                <h3 className="text-phlox">Ajouter une Photo / Vidéo</h3>
-                                <input className="block h-full w-full absolute top-0 bottom-0 left-0 right-0 opacity-0 cursor-pointer" type="file"
-                                        name="file"
+                                <button className="text-phlox"
+                                        type="button"
+                                        onClick={upload}
+                                >Ajouter une Photo / Vidéo</button>
+                                <input className="block h-full w-full absolute top-0 bottom-0 left-0 right-0 opacity-0 cursor-pointer"
+                                        type="file"
                                         value={picture}
-                                        onChange={onChange}
+                                        onChange={(e) => setFile(e.target.files[0])}
                                 />
                             </div>
                         </div>

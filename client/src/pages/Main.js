@@ -1,17 +1,21 @@
+// Components
 import AnimatedText from "../components/AnimatedText";
 import EventItem from "../components/EventItem";
 
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import {toast} from "react-toastify";
-import {getAllEvents, reset} from "../features/events/eventsSlice";
+import {getAllEvents} from "../features/events/eventsSlice";
 import FilterBar from "../components/FilterBar";
 
-const Main = () => {
+const Main = ( {participant}) => {
 
     const dispatch = useDispatch();
-    const { events, isLoading, isListing, isError, message } = useSelector((state) => state.events)
+    const { events, isListing, isError, message } = useSelector((state) => state.events)
     const { user } = useSelector((state) => state.auth);
+
+    // Create a state to store the filtered events
+    const [filteredEvents, setFilteredEvents] = useState([])
 
     // Create a state to store the active filter
     const [activeFilter, setActiveFilter] = useState('Tous')
@@ -20,20 +24,22 @@ const Main = () => {
         if(isError) {
             toast.error(message)
         } else {
-            if (Array.isArray(events) && events.length === 0) {
+            if(!isListing) {
                 dispatch(getAllEvents())
+            } else {
+            if (!events || events.length === 0) {
+                toast.info("Aucun évènement à venir")
+            } else {
+                setFilteredEvents(events.filter((event) => {
+                    return activeFilter === 'Tous' || event.type === activeFilter;
+                }))
             }
         }
-    }, [events, isError, message, isListing, dispatch]);
+    }}, [events, isError, message, isListing, dispatch, activeFilter]);
 
     const handleFilter = (filter) => {
         setActiveFilter(filter)
     }
-
-    //Create a new array of events filtered by the active filter
-    const filteredEvents = events.filter((event) => {
-        return activeFilter === 'Tous' || event.type === activeFilter;
-    })
 
     return (
         <main className="bg-smoke px-32 py-16">
@@ -45,10 +51,10 @@ const Main = () => {
                 {filteredEvents.length > 0 ? (
                     <div className="flex flex-col gap-y-12">
                         {filteredEvents.map((event) => (
-                            <EventItem event={event} key={event._id} user={user} est_name={user.est_name} />
+                            <EventItem event={event} key={event._id} user={user} est_name={user.est_name} participant={event.participants} />
                         ))}
                     </div>
-                ) : null}
+                ) :  <h3 className="text-2xl my-16">Aucun évènement pour le moment</h3>}
             </section>
         </main>
     );

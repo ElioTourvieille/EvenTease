@@ -13,23 +13,19 @@ const app = express()
 // Configure Multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, 'uploads/') // Folder where we want to upload the files
+        return cb(null, './Files') // Folder where we want to upload the files
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname) // Define the file name
+        cb(null, `${Date.now()}_${file.originalname}`) // Define the file name
     },
 });
 
-//Use "multer" to configure the upload
-const upload = multer({
-    storage: storage,
-    limits: {
-        fileSize: 1024 * 1024 * 5 // We are allowing only 5 MB files
-    }
-})
+//Use Multer to configure the upload
+const upload = multer({storage})
 
 app.post('/upload', upload.single('file'), (req, res) => {
-    res.send('Fichier téléchargé avec succès')
+    console.log('Received file:', req.file);
+    console.log(req.file);
 })
 
 app.use(express.json())
@@ -37,6 +33,9 @@ app.use(express.urlencoded({extended: false}))
 
 app.use("/api/users", require("./routes/usersRoutes"))
 app.use("/api/events", require("./routes/eventsRoutes"))
+app.post('/api/events/:id/participate', (req, res) => {
+    console.log('Received participate request for event ID:', req.params.eventId);
+});
 
 app.use(cors())
 app.listen(port, () => {

@@ -4,8 +4,10 @@ import eventsService from "./eventsService";
 
 const initialState = {
     events: [],
+    participants: [],
     isSuccess: false,
     isListing: false,
+    isParticipating: false,
     isError: false,
     isLoading: false,
     message: ''
@@ -34,10 +36,24 @@ export const getAllEvents = createAsyncThunk(
             const message = (error.response && error.response.data && error.response.data.message
             ) || error.message || error.toString();
             return thunkAPI.rejectWithValue(message)
-
         }
     }
 )
+
+export const participateInEvent = createAsyncThunk(
+    'events/participate',
+    async(id, thunkAPI) => {
+
+            try {
+                const token = thunkAPI.getState().auth.user.token
+                return await eventsService.participateInEvent(id, token);
+
+            } catch (error) {
+                const message = (error.response && error.response.data && error.response.data.message
+                ) || error.message || error.toString();
+                return thunkAPI.rejectWithValue(message)
+            }
+    })
 
 export const getUserEvents = createAsyncThunk(
     'events',
@@ -78,6 +94,7 @@ export const eventsSlice = createSlice({
         reset: (state) => {
             state.isLoading = false;
             state.isSuccess = false;
+            state.isParticipating = false;
             state.isError = false;
             state.message = '';
         }
@@ -90,7 +107,7 @@ export const eventsSlice = createSlice({
             .addCase(createEvent.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.events = action.payload;
+                state.events.push(action.payload);
             })
             .addCase(createEvent.rejected, (state, action) => {
                 state.isLoading = false;
@@ -107,6 +124,19 @@ export const eventsSlice = createSlice({
                 state.events = action.payload;
             })
             .addCase(getAllEvents.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(participateInEvent.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(participateInEvent.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isParticipating = true;
+                state.participants = action.payload;
+            })
+            .addCase(participateInEvent.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;
@@ -130,7 +160,7 @@ export const eventsSlice = createSlice({
             .addCase(deleteEvent.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.userEvents = state.userEvents.filter((article) => article._id !== action.payload.id);
+                state.userEvents = state.userEvents.filter((event) => event._id !== action.payload.id);
             })
             .addCase(deleteEvent.rejected, (state, action) => {
                 state.isLoading = false;
