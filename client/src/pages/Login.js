@@ -53,13 +53,13 @@ const Login = () => {
             <h1 className="font-extrabold text-4xl py-8">Se connecter à EvenTease</h1>
             <div className="border-secondary">
                <form onSubmit={onSubmit}
-                     className="w-full flex flex-col bg-smoke rounded gap-8 py-12 px-20">
+                     className="w-full flex flex-col bg-smoke rounded gap-8 py-12 px-24">
 
                    <div className="w-full flex flex-col justify-between items-left">
                        <label className="font-bold text-xl mb-2" htmlFor="email">Adresse Mail</label>
                        <input
                            type="email"
-                           className="border border-jet rounded-lg py-2 px-10"
+                           className="border border-jet rounded-lg py-2 px-8"
                            name='email'
                            value={email}
                            onChange={onChange}

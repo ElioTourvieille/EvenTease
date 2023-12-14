@@ -35,7 +35,7 @@ const eventSchema = mongoose.Schema({
         trim: true,
     },
     picture: {
-        type: String, // We are storing the file URL as a string
+        type: String, // We are storing the file name as a string
     },
     est_name: {
         type: String,

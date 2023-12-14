@@ -8,7 +8,7 @@ import {toast} from "react-toastify";
 import {getAllEvents} from "../features/events/eventsSlice";
 import FilterBar from "../components/FilterBar";
 
-const Main = ( {participant}) => {
+const Main = ( { participant }) => {
 
     const dispatch = useDispatch();
     const { events, isListing, isError, message } = useSelector((state) => state.events)
@@ -45,13 +45,13 @@ const Main = ( {participant}) => {
         <main className="bg-smoke px-32 py-16">
             <AnimatedText text="Les évènements à venir" />
 
-            <FilterBar activeFilter={activeFilter} onFilterClick={handleFilter}/>
+            <FilterBar classname="mx-auto" activeFilter={activeFilter} onFilterClick={handleFilter}/>
 
-            <section className='flex justify-center mt-16'>
+            <section className='w-full flex justify-center mt-16'>
                 {filteredEvents.length > 0 ? (
-                    <div className="flex flex-col gap-y-12">
+                    <div className="w-[85%] flex flex-col gap-y-12">
                         {filteredEvents.map((event) => (
-                            <EventItem event={event} key={event._id} user={user} est_name={user.est_name} participant={event.participants} />
+                            <EventItem event={event} key={event._id} user={user} est_name={user.est_name} />
                         ))}
                     </div>
                 ) :  <h3 className="text-2xl my-16">Aucun évènement pour le moment</h3>}

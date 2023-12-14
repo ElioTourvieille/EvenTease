@@ -6,6 +6,7 @@ import {toast} from "react-toastify";
 import {createEvent, reset} from "../features/events/eventsSlice";
 import axios from "axios";
 
+
 const CreateEvent = () => {
 
     const [formData, setFormData] = useState({
@@ -13,25 +14,25 @@ const CreateEvent = () => {
         date: '',
         address: '',
         description: '',
-        picture: '',
+        type: 'Team Building',
+        invitation: 'Ouvert à tous',
     })
-    const [type, setType] = useState('Team Building')
-    const [invitation, setInvitation] = useState('Ouvert à tous')
+
     const [file, setFile] = useState()
 
-    const { user } = useSelector((state) => state.auth)
+    const {user} = useSelector((state) => state.auth)
 
-    const { title, date, address, description, picture } = formData
-    const { events, isLoading, isSuccess, isError, message } = useSelector((state) => state.events)
+    const {title, type, invitation, date, address, description} = formData
+    const {events, isLoading, isSuccess, isError, message} = useSelector((state) => state.events)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
     useEffect(() => {
-        if(isSuccess) {
-            toast.success(`L'évènement "${title}" a bien été créé.` )
+        if (isSuccess) {
+            toast.success(`L'évènement "${title}" a bien été créé.`)
             navigate('/main')
         }
-        if(isError) {
+        if (isError) {
             toast.error(message)
         }
         dispatch(reset())
@@ -45,29 +46,26 @@ const CreateEvent = () => {
         }))
     }
 
-    const onInvitChange = (e) => {
-            setInvitation(e.target.value);
+    const handleFileUpload = async (e) => {
+        // Extract the file
+        console.log(e.target.files[0])
+        setFile(e.target.files[0])
+
+        const formData = new FormData();
+        formData.append('file', (e.target.files[1]))
     }
 
-    const onTypeChange = (e) => {
-        setType(e.target.value)
-    }
-
-    const upload = () => {
-        const formData = new FormData()
-        formData.append('file', file)
-        axios.post('http://localhost:3001/upload', formData)
-            .then(res => {})
-            .catch(err => console.log(err))
-    }
-
-    const onSubmit = (e) => {
+    const onSubmit = async (e) => {
         e.preventDefault()
 
         if (!title || !date || !address || !description) {
             toast.error("Veuillez remplir tous les champs.")
             return
         }
+
+        const result = await axios.post('http://localhost:3000/api/events/upload', formData, {
+            headers: {'Content-Type': 'multipart/form-data'},
+        })
 
         const eventData = {
             title,
@@ -76,12 +74,11 @@ const CreateEvent = () => {
             date,
             address,
             description,
-            picture: picture ? picture : null,
+            picture: result.data,
             user: user._id,
             est_name: user.est_name,
             participants: []
         }
-
         dispatch(createEvent(eventData))
     }
 
@@ -90,7 +87,7 @@ const CreateEvent = () => {
 
             <section className="w-1/2 bg-smoke flex flex-col items-center">
                 <h1 className="font-bold text-5xl py-12">Créer un event</h1>
-                <img className="w-4/5 h-[100%]" src={newEvent} alt="Formulaire Create Event" />
+                <img className="w-4/5 h-[100%]" src={newEvent} alt="Formulaire Create Event"/>
             </section>
 
             <section className="w-1/2 pb-2 pl-16 pr-10 flex items-center justify-center">
@@ -113,7 +110,7 @@ const CreateEvent = () => {
                             <select className="min-w-[250px] border border-jet rounded-lg py-2 px-8 text-center"
                                     name="type"
                                     value={type}
-                                    onChange={onTypeChange}
+                                    onChange={onChange}
                             >
                                 <option value="Team Building">Team Building</option>
                                 <option value="Conférence">Conférence</option>
@@ -127,11 +124,11 @@ const CreateEvent = () => {
                             <select className="min-w-[250px] border border-jet rounded-lg py-2 px-8 text-center"
                                     name="invitation"
                                     value={invitation}
-                                    onChange={onInvitChange}
+                                    onChange={onChange}
                             >
                                 <option className="mr-2" value="Ouvert à tous">Ouvert à tous</option>
                                 <option value="Equipe de direction">Equipe de direction</option>
-                                <option value="Service concerné" >Service concerné</option>
+                                <option value="Service concerné">Service concerné</option>
                             </select>
                         </div>
 
@@ -169,15 +166,17 @@ const CreateEvent = () => {
                         </div>
 
                         <div className="w-full flex justify-end hover:scale-105 ease-in">
-                            <div className="w-2/3 text-center border border-azure rounded-lg py-[1rem] px-2 relative cursor-pointer">
+                            <div
+                                className="w-2/3 text-center border border-azure rounded-lg py-[1rem] px-2 relative cursor-pointer">
                                 <button className="text-phlox"
                                         type="button"
-                                        onClick={upload}
-                                >Ajouter une Photo / Vidéo</button>
-                                <input className="block h-full w-full absolute top-0 bottom-0 left-0 right-0 opacity-0 cursor-pointer"
-                                        type="file"
-                                        value={picture}
-                                        onChange={(e) => setFile(e.target.files[0])}
+                                >Ajouter une Photo / Vidéo
+                                </button>
+                                <input
+                                    className="block h-full w-full absolute top-0 bottom-0 left-0 right-0 opacity-0 cursor-pointer"
+                                    name="picture"
+                                    type="file"
+                                    onChange={handleFileUpload}
                                 />
                             </div>
                         </div>

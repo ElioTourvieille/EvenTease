@@ -11,12 +11,9 @@ const EventItem = ({ user, event, est_name }) => {
 
     const dispatch = useDispatch();
     const userEvents = event.est_name === est_name
-    const [isParticipating, setIsParticipating] = useState(false)
     const [participants, setParticipants] = useState(event.participants || [])
     const [displayPopup, setDisplayPopup] = useState(false)
 
-    console.log(event)
-    console.log(participants)
     const handlePopup = () => {
         setDisplayPopup(!displayPopup)
     }
@@ -37,14 +34,12 @@ const EventItem = ({ user, event, est_name }) => {
         } else {
             toast.info(`Vous êtes déjà inscrit à l'événement ${event.title}.`);
         }
-
-        setIsParticipating(true);
     };
 
         return (
             <>
             {userEvents && (
-            <div className="flex flex-row justify-between w-[90%] h-auto border border-phlox rounded-lg p-10 bg-white ">
+            <div className="flex flex-row justify-between w-full h-auto border border-phlox rounded-lg p-10 bg-white ">
                 <div className="w-1/2 flex flex-col gap-y-4 items-start ml-10">
                     <h3 className="text-azure text-xl font-semibold">{event.title}</h3>
                     <p className="">{event.type}</p>
@@ -65,7 +60,7 @@ const EventItem = ({ user, event, est_name }) => {
                                     className="btn-primary">Participer</button>
                         ) : (
                             <button onClick=""
-                                    className="btn-primary">Se désinscrire</button>
+                                    className="btn-primary opacity-60">Se désinscrire</button>
                         )}
 
                     </div>
@@ -89,7 +84,7 @@ const EventItem = ({ user, event, est_name }) => {
                                 <span className="flex items-center gap-x-8"><IoIosPeople className="text-azure text-2xl"/><p
                                     className="text-lg">{event.invitation}</p> </span><span className="flex items-center gap-x-8"><BiCalendarCheck className="text-azure text-2xl"/><p
                                 className="text-lg">{event.date}</p></span>
-                                <span className="flex items-center gap-x-8"><FaMapMarkerAlt className="text-azure text-2xl"/><p
+                                <span className="flex items-center gap-x-8 mb-5"><FaMapMarkerAlt className="text-azure text-2xl"/><p
                                     className="text-lg">{event.address}</p></span>
                                 <iframe src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d11049.068067113838!2d6.1450985!3d46.1852449!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x478c7adbb23cb62b%3A0x9d7cd44468ec73a7!2sSAE%20Institute%20Gen%C3%A8ve!5e0!3m2!1sfr!2sch!4v1701876950624!5m2!1sfr!2sch" width="80%" allowFullScreen="" loading="lazy" referrerPolicy="no-referrer-when-downgrade"></iframe>
                             </div>

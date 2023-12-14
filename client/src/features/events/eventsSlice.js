@@ -10,7 +10,7 @@ const initialState = {
     isParticipating: false,
     isError: false,
     isLoading: false,
-    message: ''
+    message: '',
 };
 
 export const createEvent = createAsyncThunk(
@@ -46,7 +46,7 @@ export const participateInEvent = createAsyncThunk(
 
             try {
                 const token = thunkAPI.getState().auth.user.token
-                return await eventsService.participateInEvent(id, token);
+                return await eventsService.participateInEvent(id, token)
 
             } catch (error) {
                 const message = (error.response && error.response.data && error.response.data.message

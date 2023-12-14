@@ -1,6 +1,7 @@
 const asyncHandler = require("express-async-handler")
 const Events = require("../models/eventsModel")
 const Users = require("../models/usersModel")
+const path = require("path")
 
 // @desc Get all events
 // @route GET /api/events/all
@@ -26,34 +27,37 @@ const getUserEvents = asyncHandler( async(req, res) => {
 // @desc    Create new event
 // @route   POST /api/events/create
 // @access  Private
-
 const createEvent = asyncHandler( async(req, res) => {
-    if (!req.body.title || !req.body.date || !req.body.address ) {
+    const {title, type, invitation, date, address, description} = req.body
+    const picture = req.files
+    if (!title || !date || !address || !description) {
         res.status(400)
         throw new Error("Merci de remplir tous les champs")
     }
 
-    //Create event
-    const event = await Events.create({
+    // Create event and save it on the database
+    const newEvent = await Events.create({
         user: req.body.user,
-        title: req.body.title,
-        type: req.body.type,
-        invitation: req.body.invitation,
-        description: req.body.description,
-        date: req.body.date,
-        address: req.body.address,
-        //picture: req.file.filename,
+        title,
+        type,
+        invitation,
+        description,
+        date,
+        address,
         est_name: req.body.est_name,
         participants: [],
     })
 
-    if (event) {
-        res.status(201).json(event)
-    } else {
+    if(!newEvent){
         res.status(400)
         throw new Error("Erreur lors de la création de l'évènement, veuillez réessayer")
+    } else {
+        res.status(201).json(newEvent)
     }
+    // add picture to the event
+    await picture.mv(path.join(picturesFolder, picture.name, "layout.jpg"))
 })
+
 
 //@desc    Participate to event
 //@route   PUT /api/events/:id/participate
@@ -82,16 +86,14 @@ const participateInEvent = asyncHandler(async (req, res) => {
 
     // Add the user to the event participants
     if (!event.participants || !Array.isArray(event.participants)) {
-        // Si ce n'est pas le cas, initialisez event. participants comme un nouveau tableau vide
+        // If the participants field is not an array, we create it
         event.participants = [];
     }
 
-    // Maintenant, vous pouvez utiliser push en toute sécurité
+    // Now, we can push the user
     event.participants.push(user);
     // Save the modifications
     await event.save()
-
-    console.log(event.participants)
 
     res.status(200).json({message: "Participation enregistrée avec succès"});
 })
