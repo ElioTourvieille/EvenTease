@@ -1,6 +1,7 @@
 // Components
 import AnimatedText from "../components/AnimatedText";
 import EventItem from "../components/EventItem";
+import Spinner from "../components/Spinner";
 
 import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
@@ -8,10 +9,10 @@ import {toast} from "react-toastify";
 import {getAllEvents} from "../features/events/eventsSlice";
 import FilterBar from "../components/FilterBar";
 
-const Main = ( { participant }) => {
+const Main = () => {
 
     const dispatch = useDispatch();
-    const { events, isListing, isError, message } = useSelector((state) => state.events)
+    const { events, isListing, isLoading, isError, message } = useSelector((state) => state.events)
     const { user } = useSelector((state) => state.auth);
 
     // Create a state to store the filtered events
@@ -42,10 +43,12 @@ const Main = ( { participant }) => {
     }
 
     return (
-        <main className="bg-smoke px-32 py-16">
+        <main className="flex flex-col items-center bg-smoke px-32 py-16">
             <AnimatedText text="Les évènements à venir" />
 
-            <FilterBar classname="mx-auto" activeFilter={activeFilter} onFilterClick={handleFilter}/>
+            <FilterBar activeFilter={activeFilter} onFilterClick={handleFilter}/>
+
+            {isLoading && <Spinner />}
 
             <section className='w-full flex justify-center mt-16'>
                 {filteredEvents.length > 0 ? (

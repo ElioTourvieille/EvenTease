@@ -10,6 +10,9 @@ module.exports = {
         phlox: "#E02AFF",
         azure: "#0080FF",
       },
+      animation: {
+        'spin-slow': "spin 8s linear infinite",
+      },
     },
     screens: {
       '2xl': {max: '1535px'},

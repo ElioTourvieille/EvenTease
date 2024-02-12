@@ -77,7 +77,6 @@ const loginUser = asyncHandler(async (req, res) => {
         res.status(400)
         throw new Error("Email ou mot de passe incorrect")
     }
-
 })
 
 // @desc    Get user data
@@ -93,6 +92,33 @@ const getUser = asyncHandler(async (req, res) => {
     })
 })
 
+// @desc    Update user data
+// @route   PUT /api/users/me
+// @access  Private
+const updateUser = asyncHandler(async (req, res) => {
+    const userId = req.params.id
+    const user = await UsersModel.findById(req.user.id) // ID from token
+    if (!user) {
+        res.status(404);
+        throw new Error("Utilisateur introuvable")
+    }
+    // Update user
+    const updateUser = await UsersModel.findByIdAndUpdate(userId, req.body, {new: true})
+    res.status(200).json(updateUser)
+})
+
+// @desc    Count users
+// @route   GET /api/users/count
+// @access  Private
+const getUserCount = asyncHandler(async (req, res) => {
+    try{
+        const count = await UsersModel.countDocuments()
+        res.status(200).json({ count })
+    } catch(err){
+        res.status(500).json({ message: 'Erreur lors de la récupération du nombre d\'utilisateurs' })
+    }
+})
+
 //  Generate JWT
 const generateToken = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET, {
@@ -103,5 +129,7 @@ const generateToken = (id) => {
 module.exports = {
     registerUser,
     loginUser,
-    getUser
+    getUser,
+    updateUser,
+    getUserCount
 }

@@ -14,7 +14,7 @@ const Login = () => {
     const { email, password } = formData
     const navigate = useNavigate()
     const dispatch = useDispatch()
-    const { user, isLoading, isSuccess, isError, message } = useSelector(state => state.auth)
+    const { user, isSuccess, isError, message } = useSelector(state => state.auth)
 
     useEffect(() => {
         if(isError) {
@@ -49,7 +49,7 @@ const Login = () => {
 
     return (
         <main className="flex flex-col items-center py-12">
-            <img className="w-1/5 h-auto" src={logo} alt={'logo'} title="Accueil"/>
+            <img className="w-1/5 h-auto rounded-2xl" src={logo} alt={'logo'} title="Accueil"/>
             <h1 className="font-extrabold text-4xl py-8">Se connecter à EvenTease</h1>
             <div className="border-secondary">
                <form onSubmit={onSubmit}

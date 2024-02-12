@@ -4,7 +4,6 @@ import eventsService from "./eventsService";
 
 const initialState = {
     events: [],
-    participants: [],
     isSuccess: false,
     isListing: false,
     isParticipating: false,
@@ -40,20 +39,16 @@ export const getAllEvents = createAsyncThunk(
     }
 )
 
-export const participateInEvent = createAsyncThunk(
-    'events/participate',
-    async(id, thunkAPI) => {
-
-            try {
-                const token = thunkAPI.getState().auth.user.token
-                return await eventsService.participateInEvent(id, token)
-
-            } catch (error) {
-                const message = (error.response && error.response.data && error.response.data.message
-                ) || error.message || error.toString();
-                return thunkAPI.rejectWithValue(message)
-            }
-    })
+export const updateEvent = createAsyncThunk(
+    'events/updateEvent',
+    async (event, { rejectWithValue }) => {
+        try {
+           return await eventsService.updateEvent(event.id, event.data, event.token);
+        } catch (error) {
+            return rejectWithValue(error.message);
+        }
+    }
+);
 
 export const getUserEvents = createAsyncThunk(
     'events',
@@ -62,6 +57,52 @@ export const getUserEvents = createAsyncThunk(
         try {
             const token = thunkAPI.getState().auth.user.token
             return await eventsService.getUserEvent(token);
+
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message
+            ) || error.message || error.toString();
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+export const participateInEvent = createAsyncThunk(
+    'events/participate',
+    async(id, thunkAPI) => {
+
+        try {
+            const token = thunkAPI.getState().auth.user.token
+            return await eventsService.participateInEvent(id, token);
+
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message
+            ) || error.message || error.toString();
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+export const unsubscribeFromEvent = createAsyncThunk(
+    'events/unsubscribe',
+    async(id, thunkAPI) => {
+
+        try {
+            const token = thunkAPI.getState().auth.user.token
+            return await eventsService.unsubscribeFromEvent(id, token);
+
+        } catch (error) {
+            const message = (error.response && error.response.data && error.response.data.message
+            ) || error.message || error.toString();
+            return thunkAPI.rejectWithValue(message)
+        }
+    }
+)
+
+export const getEventCount = createAsyncThunk(
+    'events/count',
+    async(_, thunkAPI) => {
+        try {
+            return await eventsService.getEventCount();
 
         } catch (error) {
             const message = (error.response && error.response.data && error.response.data.message
@@ -160,9 +201,40 @@ export const eventsSlice = createSlice({
             .addCase(deleteEvent.fulfilled, (state, action) => {
                 state.isLoading = false;
                 state.isSuccess = true;
-                state.userEvents = state.userEvents.filter((event) => event._id !== action.payload.id);
+                state.events = state.events.filter(event => event._id !== action.meta.arg);
             })
             .addCase(deleteEvent.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(getEventCount.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(getEventCount.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isListing = true;
+                state.eventCount = action.payload;
+            })
+            .addCase(getEventCount.rejected, (state, action) => {
+                state.isLoading = false;
+                state.isError = true;
+                state.message = action.payload;
+            })
+            .addCase(updateEvent.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(updateEvent.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.isSuccess = true;
+                state.events = state.events.map(event => {
+                    if(event._id === action.payload._id) {
+                        return action.payload;
+                    }
+                    return event;
+                });
+            })
+            .addCase(updateEvent.rejected, (state, action) => {
                 state.isLoading = false;
                 state.isError = true;
                 state.message = action.payload;

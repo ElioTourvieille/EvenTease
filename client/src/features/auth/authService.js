@@ -25,10 +25,31 @@ const logout = () => {
     localStorage.removeItem('user');
 };
 
+// Update user
+const updateUser = async (userData) => {
+    const response = await axios.put(API_URL + 'update', userData);
+    if (response.data) {
+        localStorage.setItem('user', JSON.stringify(response.data));
+    }
+    return response.data;
+};
+
+const getUserCount = async () => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.get(API_URL + 'count', {
+        headers: {
+            'Authorization': `Bearer ${user.token}`
+        }
+    });
+    return response.data;
+};
+
 const authService = {
     register,
     login,
-    logout
+    logout,
+    updateUser,
+    getUserCount
 };
 
 export default authService;

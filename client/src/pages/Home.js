@@ -11,13 +11,14 @@ import mainImg from "../assets/img/celebration.png";
 import {LuBellRing} from "react-icons/lu";
 import {BiCalendarCheck, BiMailSend} from "react-icons/bi";
 import {IoPeopleSharp} from "react-icons/io5";
+
 const Home = () => {
 
     return (
         <main>
             <section className="flex justify-evenly my-16 px-8 py-10">
                 <Fade duration="1000">
-                <img src={mainImg} alt="Image principale de célébration" className='w-full h-auto outline-none xl:inline-block sm:hidden xs:hidden'
+                <img src={mainImg} alt="Personnes festives" className='w-full h-auto outline-none xl:inline-block sm:hidden xs:hidden'
                      loading="eager"/>
                 </Fade>
                 <div className="flex flex-col justify-center items-center text-center">

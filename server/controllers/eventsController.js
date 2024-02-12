@@ -1,7 +1,9 @@
 const asyncHandler = require("express-async-handler")
 const Events = require("../models/eventsModel")
 const Users = require("../models/usersModel")
+const rootPath = require("../rooPath")
 const path = require("path")
+const picturesFolder = path.join(rootPath, "uploads")
 
 // @desc Get all events
 // @route GET /api/events/all
@@ -29,10 +31,16 @@ const getUserEvents = asyncHandler( async(req, res) => {
 // @access  Private
 const createEvent = asyncHandler( async(req, res) => {
     const {title, type, invitation, date, address, description} = req.body
-    const picture = req.files
     if (!title || !date || !address || !description) {
         res.status(400)
         throw new Error("Merci de remplir tous les champs")
+    }
+
+    let image;
+    if (req.file) {
+        image = req.file.path;
+    } else {
+        image = path.join(picturesFolder, "default.jpg")
     }
 
     // Create event and save it on the database
@@ -45,7 +53,7 @@ const createEvent = asyncHandler( async(req, res) => {
         date,
         address,
         est_name: req.body.est_name,
-        participants: [],
+        image
     })
 
     if(!newEvent){
@@ -54,49 +62,60 @@ const createEvent = asyncHandler( async(req, res) => {
     } else {
         res.status(201).json(newEvent)
     }
-    // add picture to the event
-    await picture.mv(path.join(picturesFolder, picture.name, "layout.jpg"))
 })
 
-
-//@desc    Participate to event
-//@route   PUT /api/events/:id/participate
-//@access  Private
+//@desc   Participate in event
+//@route  PUT /api/events/:id/participate
+//@access Private
 const participateInEvent = asyncHandler(async (req, res) => {
-    const eventId = req.params.id
-
-    if (!eventId) {
-        res.status(400)
-        throw new Error("L'ID de l'événement est manquant")
-    }
-
-    // Check if the event exists
-    const event = await Events.findById(eventId)
-    if (!event) {
-        res.status(404);
+    console.log('Received participate request for event ID:', req.params.id);
+    const event = await Events.findById(req.params.id)
+    if(!event){
+        res.status(404)
         throw new Error("Évènement non trouvé")
     }
+    if (!event.participants.includes(req.user._id)) {
+        event.participants.push(req.user._id)
+    } else {
+        event.participants = event.participants.filter(id => id.toString() !== req.user._id.toString())
+    }
+    const updatedEvent = await event.save()
 
-    // Check if the user exists
-    const user = req.user.id
-    if (!user) {
-        res.status(404);
-        throw new Error("Utilisateur non trouvé")
+    if (!updatedEvent) {
+        res.status(500)
+        throw new Error("Erreur lors de la mise à jour de l'événement")
     }
 
-    // Add the user to the event participants
-    if (!event.participants || !Array.isArray(event.participants)) {
-        // If the participants field is not an array, we create it
-        event.participants = [];
+    res.status(200).json(updatedEvent)
+} )
+
+//@desc Unsubscribe from event
+//@route DELETE /api/events/:id/unsubscribe
+//@access Private
+const unsubscribeFromEvent = asyncHandler(async (req, res) => {
+    const userId = req.user._id.toString()
+
+    try{
+        const event = await Events.findById(req.params.id)
+        if(!event){
+            res.status(404)
+            throw new Error("Évènement non trouvé")
+        }
+
+       const userIndex = event.participants.indexOf(userId)
+        if(userIndex === -1){
+            res.status(404)
+            throw new Error("Vous n'êtes pas inscrit à cet évènement")
+        }
+
+        event.participants.splice(userIndex, 1)
+        await event.save()
+
+        res.status(200).json({ message: "Vous avez été désinscrit de l'évènement" })
+    } catch(err){
+        res.status(500).json({ message: "Erreur lors de la désinscription" })
     }
-
-    // Now, we can push the user
-    event.participants.push(user);
-    // Save the modifications
-    await event.save()
-
-    res.status(200).json({message: "Participation enregistrée avec succès"});
-})
+} )
 
 // @desc    Update event
 // @route   PUT /api/events/:id
@@ -122,6 +141,19 @@ const updateEvent = asyncHandler( async(req, res) => {
 
     res.status(200).json(updatedEvent)
 })
+
+//@desc Count events
+//@route GET /api/events/count
+//@access Public
+const getEventCount = asyncHandler(async (req, res) => {
+    try{
+        const count = await Events.countDocuments()
+        res.status(200).json({ count })
+    } catch(err){
+        res.status(500).json({ message: 'Erreur lors de la récupération du nombre d\'évènements' })
+    }
+})
+
 
 // @desc    Delete event
 // @route   DELETE /api/events/:id
@@ -154,5 +186,7 @@ module.exports = {
     createEvent,
     updateEvent,
     deleteEvent,
-    participateInEvent
+    participateInEvent,
+    unsubscribeFromEvent,
+    getEventCount
 }

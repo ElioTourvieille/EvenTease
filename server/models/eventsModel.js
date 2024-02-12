@@ -34,12 +34,18 @@ const eventSchema = mongoose.Schema({
         type: String,
         trim: true,
     },
-    picture: {
+    image: {
         type: String, // We are storing the file name as a string
+        required: false,
     },
     est_name: {
         type: String,
         required: true
+    },
+    participants: {
+        type: [mongoose.Schema.Types.ObjectId],
+        ref: 'User',
+        default: []
     },
 }, {timestamps: true})
 

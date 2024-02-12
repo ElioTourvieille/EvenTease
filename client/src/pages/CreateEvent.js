@@ -4,8 +4,6 @@ import {useDispatch, useSelector} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import {toast} from "react-toastify";
 import {createEvent, reset} from "../features/events/eventsSlice";
-import axios from "axios";
-
 
 const CreateEvent = () => {
 
@@ -23,7 +21,7 @@ const CreateEvent = () => {
     const {user} = useSelector((state) => state.auth)
 
     const {title, type, invitation, date, address, description} = formData
-    const {events, isLoading, isSuccess, isError, message} = useSelector((state) => state.events)
+    const {events, isSuccess, isError, message} = useSelector((state) => state.events)
     const navigate = useNavigate()
     const dispatch = useDispatch()
 
@@ -37,7 +35,7 @@ const CreateEvent = () => {
         }
         dispatch(reset())
 
-    }, [events, isSuccess, isError, message, navigate, dispatch])
+    }, [events, isSuccess, isError, message, navigate, dispatch, title])
 
     const onChange = (e) => {
         setFormData((prevState) => ({
@@ -48,11 +46,7 @@ const CreateEvent = () => {
 
     const handleFileUpload = async (e) => {
         // Extract the file
-        console.log(e.target.files[0])
-        setFile(e.target.files[0])
-
-        const formData = new FormData();
-        formData.append('file', (e.target.files[1]))
+        setFile((e.target.files[0]))
     }
 
     const onSubmit = async (e) => {
@@ -62,10 +56,8 @@ const CreateEvent = () => {
             toast.error("Veuillez remplir tous les champs.")
             return
         }
-
-        const result = await axios.post('http://localhost:3000/api/events/upload', formData, {
-            headers: {'Content-Type': 'multipart/form-data'},
-        })
+        const formData = new FormData();
+        formData.append('file', file);
 
         const eventData = {
             title,
@@ -74,11 +66,13 @@ const CreateEvent = () => {
             date,
             address,
             description,
-            picture: result.data,
+            image: file,
             user: user._id,
             est_name: user.est_name,
             participants: []
         }
+        Object.keys(eventData).forEach(key => formData.append(key, eventData[key]));
+
         dispatch(createEvent(eventData))
     }
 
@@ -174,7 +168,7 @@ const CreateEvent = () => {
                                 </button>
                                 <input
                                     className="block h-full w-full absolute top-0 bottom-0 left-0 right-0 opacity-0 cursor-pointer"
-                                    name="picture"
+                                    name="file"
                                     type="file"
                                     onChange={handleFileUpload}
                                 />
