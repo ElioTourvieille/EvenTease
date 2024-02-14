@@ -1,7 +1,7 @@
 {
   "name": "eventease_frontend",
   "version": "0.1.0",
-  "proxy": "https://even-tease.vercel.app",
+  "proxy": "http://localhost:8000",
   "private": true,
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.0.4",
