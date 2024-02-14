@@ -1,4 +1,4 @@
- const express = require("express")
+const express = require("express")
 const colors = require("colors")
 const dotenv = require("dotenv").config()
 const port = process.env.PORT || 5000
@@ -18,7 +18,13 @@ app.use(express.static('server' + '/uploads'))
 app.use("/api/users", require("./routes/usersRoutes"))
 app.use("/api/events", require("./routes/eventsRoutes"))
 
-app.use(cors())
+app.use(cors(
+    {
+        origin: ['https//deploy-mern-lwhq.vercel.app'],
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        credentials: true
+    }
+))
 app.listen(port, () => {
     console.log(`Serveur démarré sur le port ${port}`)
 })

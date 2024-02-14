@@ -1,56 +1,12 @@
-import React, {useEffect, useRef, useState} from 'react';
 import {NavLink, useLocation} from 'react-router-dom';
 import Logo from '../assets/img/eventease-logo.png';
 import {logout, reset} from "../features/auth/authSlice";
 import {useDispatch} from "react-redux";
 
-const SideBar = ({sidebarOpen, setSidebarOpen}) => {
+const SideBar = () => {
     const dispatch = useDispatch()
     const location = useLocation();
     const {pathname} = location;
-
-    const trigger = useRef(null);
-    const sidebar = useRef(null);
-
-    const storedSidebarExpanded = localStorage.getItem('sidebar-expanded');
-    const [sidebarExpanded] = useState(
-        storedSidebarExpanded === null ? false : storedSidebarExpanded === 'true'
-    );
-
-    // close on click outside
-    useEffect(() => {
-        const clickHandler = ({target}: MouseEvent) => {
-            if (!sidebar.current || !trigger.current) return;
-            if (
-                !sidebarOpen ||
-                sidebar.current.contains(target) ||
-                trigger.current.contains(target)
-            )
-                return;
-            setSidebarOpen(false);
-        };
-        document.addEventListener('click', clickHandler);
-        return () => document.removeEventListener('click', clickHandler);
-    });
-
-    // close if the esc key is pressed
-    useEffect(() => {
-        const keyHandler = ({keyCode}: KeyboardEvent) => {
-            if (!sidebarOpen || keyCode !== 27) return;
-            setSidebarOpen(false);
-        };
-        document.addEventListener('keydown', keyHandler);
-        return () => document.removeEventListener('keydown', keyHandler);
-    });
-
-    useEffect(() => {
-        localStorage.setItem('sidebar-expanded', sidebarExpanded.toString());
-        if (sidebarExpanded) {
-            document.querySelector('body')?.classList.add('sidebar-expanded');
-        } else {
-            document.querySelector('body')?.classList.remove('sidebar-expanded');
-        }
-    }, [sidebarExpanded]);
 
     const onLogout = () => {
         dispatch(logout())
@@ -175,7 +131,7 @@ const SideBar = ({sidebarOpen, setSidebarOpen}) => {
                                 <NavLink
                                     to="/myevents"
                                     className={`group relative flex items-center gap-2.5 rounded-sm py-2 px-4 font-medium text-xl duration-300 ease-in-out hover:bg-graydark dark:hover:bg-meta-4 ${
-                                        pathname.includes('tables') && 'bg-graydark dark:bg-meta-4'
+                                        pathname.includes('myevents') && 'bg-smoke'
                                     }`}
                                 >
                                     <svg
