@@ -20,7 +20,7 @@ app.use("/api/events", require("./routes/eventsRoutes"))
 
 app.use(cors(
     {
-        origin: ['https//deploy-mern-lwhq.vercel.app'],
+        origin: ['even-tease-front.vercel.app'],
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
         credentials: true
     }
