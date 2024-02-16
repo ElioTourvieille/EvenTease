@@ -11,3 +11,5 @@ export const LayoutVisitor = () => {
         </>
     );
 }
+
+export default LayoutVisitor;

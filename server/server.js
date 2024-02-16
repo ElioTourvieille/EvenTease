@@ -1,7 +1,7 @@
 const express = require("express")
 const colors = require("colors")
 const dotenv = require("dotenv").config()
-const port = process.env.PORT || 5000
+const port = process.env.PORT || "https://even-tease.vercel.app/"
 const connectDB = require("./config/db")
 const cors = require("cors")
 const fileUpload = require("express-fileupload");

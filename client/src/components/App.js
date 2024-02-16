@@ -3,7 +3,7 @@ import {ToastContainer} from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css'
 
 // Components imports
-import {LayoutVisitor} from "./LayoutVisitor";
+import LayoutVisitor from "./LayoutVisitor";
 import NavBar from "./NavBar";
 import Footer from "./Footer";
 import DefaultLayout from "./DefaultLayout";
