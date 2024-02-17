@@ -18,7 +18,7 @@ const Login = () => {
 
     useEffect(() => {
         if(isError) {
-            toast.error(message)
+            toast.error("Email ou mot de passe incorrect. Veuillez réessayer.")
         }
         if(isSuccess) {
             toast.success('Bienvenue ' + user.first_name + ' ' + user.last_name)
