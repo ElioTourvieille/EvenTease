@@ -6,7 +6,8 @@ const CardOne = () => {
 
     useEffect(() => {
         authService.getUserCount()
-        .then(data => setUserCount(data.count))
+            .then(data => setUserCount(data.count))
+            .catch(() => {})
     }, [])
 
     return (
@@ -20,7 +21,7 @@ const CardOne = () => {
 
                 <div className="flex items-center">
                     <h4 className="text-3xl font-bold text-black">
-                        {`${userCount*10} `}
+                        {userCount}
                     </h4>
                 </div>
 

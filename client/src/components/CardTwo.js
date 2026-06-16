@@ -7,6 +7,7 @@ const CardTwo = () => {
     useEffect(() => {
         eventsService.getEventCount()
             .then(data => setEventCount(data.count))
+            .catch(() => {})
     }, [])
 
     return (
@@ -20,7 +21,7 @@ const CardTwo = () => {
 
             <div className="flex items-center">
                 <h4 className="text-3xl font-bold text-black">
-                    {eventCount}0
+                    {eventCount}
                 </h4>
             </div>
 

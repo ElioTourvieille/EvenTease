@@ -15,7 +15,7 @@ const CardFour = () => {
 
                 <div className="flex items-center">
                     <h4 className="text-3xl font-bold text-black">
-                        {average}0
+                        {average}
                     </h4>
                 </div>
 

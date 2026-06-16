@@ -27,7 +27,10 @@ const logout = () => {
 
 // Update user
 const updateUser = async (userData) => {
-    const response = await axios.put(API_URL + 'update', userData);
+    const user = JSON.parse(localStorage.getItem('user'));
+    const response = await axios.put(API_URL + 'update', userData, {
+        headers: { 'Authorization': `Bearer ${user?.token}` }
+    });
     if (response.data) {
         localStorage.setItem('user', JSON.stringify(response.data));
     }
@@ -36,10 +39,9 @@ const updateUser = async (userData) => {
 
 const getUserCount = async () => {
     const user = JSON.parse(localStorage.getItem('user'));
+    if (!user?.token) throw new Error('Non authentifié');
     const response = await axios.get(API_URL + 'count', {
-        headers: {
-            'Authorization': `Bearer ${user.token}`
-        }
+        headers: { 'Authorization': `Bearer ${user.token}` }
     });
     return response.data;
 };

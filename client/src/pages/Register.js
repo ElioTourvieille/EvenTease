@@ -26,16 +26,12 @@ const Register = () => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        console.log(isSuccess, isError, message, user)
         if(isSuccess) {
             toast.success('Bienvenue ! ' + user.first_name + ' ' + user.last_name)
             navigate('/main')
-        }
-
-        if(isError) {
+        } else if(isError) {
             toast.error(message)
-        }
-        if(user) {
+        } else if(user) {
             navigate('/')
         }
         dispatch(reset())
@@ -66,6 +62,7 @@ const Register = () => {
               email,
               password,
               est_name,
+              est_type,
               user_type
             }
             dispatch(register(userData))
@@ -147,10 +144,10 @@ const Register = () => {
                         </div>
                         <div className="w-w-full flex flex-row justify-between items-center">
                             <label className="font-medium" htmlFor="est_type">Type d'établissement : </label>
-                            <select className="border border-jet rounded-lg py-2 px-8" name="est_type">
-                                <option value={est_type}>Entreprise</option>
-                                <option value={est_type}>Association</option>
-                                <option value={est_type}>Autres</option>
+                            <select className="border border-jet rounded-lg py-2 px-8" name="est_type" value={est_type} onChange={onChange}>
+                                <option value="Entreprise">Entreprise</option>
+                                <option value="Association">Association</option>
+                                <option value="Autres">Autres</option>
                             </select>
                         </div>
                     </div>
@@ -161,9 +158,8 @@ const Register = () => {
                             type="checkbox"
                             className="w-[35px] h-[35px] bg-azure rounded-2xl"
                             name='isAdmin'
-                            value={user_type}
-                            onClick={onClick}
-                            onChange={onChange}
+                            checked={user_type === 'admin'}
+                            onChange={onClick}
                         />
                     </div>
                 </div>

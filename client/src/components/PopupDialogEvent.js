@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 import {useDispatch} from "react-redux";
 import {updateEvent} from "../features/events/eventsSlice";
+import {toast} from "react-toastify";
 
 const PopupDialogEvent = ({event}) => {
     const [open, setOpen] = useState(false)
@@ -25,7 +26,12 @@ const PopupDialogEvent = ({event}) => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        dispatch(updateEvent({title, type, date, time, address, description})); // Dispatch with new values
+        dispatch(updateEvent({_id: event._id, title, type, date, time, address, description}))
+            .then(() => {
+                toast.success('Événement modifié avec succès');
+                handleClose();
+            })
+            .catch(() => toast.error('Erreur lors de la modification'));
     };
 
     return (
