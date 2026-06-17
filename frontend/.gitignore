@@ -1,0 +1,21 @@
+# Next.js
+.next/
+out/
+next-env.d.ts
+
+# Dépendances
+node_modules/
+
+# Build
+dist/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+
+# OS
+.DS_Store
