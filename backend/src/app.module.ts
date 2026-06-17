@@ -4,6 +4,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
 import { OrganizationsModule } from './organizations/organizations.module'
 import { AuthModule } from './auth/auth.module'
+import { EventsModule } from './events/events.module'
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard'
 import { RolesGuard } from './common/guards/roles.guard'
 
@@ -21,6 +22,7 @@ import { RolesGuard } from './common/guards/roles.guard'
     }),
     OrganizationsModule,
     AuthModule,
+    EventsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },
