@@ -19,7 +19,7 @@ export class OrganizationsService {
     return `${segment()}-${segment()}`
   }
 
-  private async generateUniqueInviteCode(): Promise<string> {
+  async generateUniqueInviteCode(): Promise<string> {
     let code = this.generateCode()
     while (await this.organizationModel.exists({ inviteCode: code })) {
       code = this.generateCode()
