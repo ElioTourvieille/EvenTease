@@ -39,6 +39,10 @@ __decorate([
     (0, mongoose_1.Prop)({ required: true, enum: ['owner', 'admin', 'member'], default: 'member' }),
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
+__decorate([
+    (0, mongoose_1.Prop)(),
+    __metadata("design:type", String)
+], User.prototype, "refreshToken", void 0);
 exports.User = User = __decorate([
     (0, mongoose_1.Schema)({ timestamps: { createdAt: true, updatedAt: false } })
 ], User);

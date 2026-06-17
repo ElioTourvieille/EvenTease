@@ -20,12 +20,12 @@ import type { JwtPayload } from './strategies/jwt.strategy'
 
 const SALT_ROUNDS = 10
 
-interface AuthTokens {
+export interface AuthTokens {
   access_token: string
   refresh_token: string
 }
 
-interface AuthResponse extends AuthTokens {
+export interface AuthResponse extends AuthTokens {
   user: {
     _id: string
     first_name: string
