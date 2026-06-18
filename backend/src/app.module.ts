@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose'
 import { OrganizationsModule } from './organizations/organizations.module'
 import { AuthModule } from './auth/auth.module'
 import { EventsModule } from './events/events.module'
+import { UsersModule } from './users/users.module'
+import { UploadsModule } from './uploads/uploads.module'
 import { JwtAuthGuard } from './common/guards/jwt-auth.guard'
 import { RolesGuard } from './common/guards/roles.guard'
 
@@ -23,6 +25,8 @@ import { RolesGuard } from './common/guards/roles.guard'
     OrganizationsModule,
     AuthModule,
     EventsModule,
+    UsersModule,
+    UploadsModule,
   ],
   providers: [
     { provide: APP_GUARD, useClass: JwtAuthGuard },

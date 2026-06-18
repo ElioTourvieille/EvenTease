@@ -37,6 +37,10 @@ Thumbs.db
 # Tests
 /coverage
 
+# Uploads (fichiers utilisateurs — garder le dossier, pas les fichiers)
+backend/public/uploads/*
+!backend/public/uploads/.gitkeep
+
 # Next.js
 .next/
 next-env.d.ts

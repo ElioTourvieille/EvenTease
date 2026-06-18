@@ -11,7 +11,7 @@ import { User, UserDocument } from '../users/schemas/user.schema'
 import { CreateEventDto } from './dto/create-event.dto'
 import { UpdateEventDto } from './dto/update-event.dto'
 
-interface EventStats {
+export interface EventStats {
   eventCount: number
   userCount: number
   pendingCount: number
