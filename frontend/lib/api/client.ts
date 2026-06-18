@@ -1,7 +1,7 @@
-import axios from 'axios'
+import axios, { type AxiosError } from 'axios'
 
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000/api',
+  baseURL: `${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:8000'}/api`,
   headers: { 'Content-Type': 'application/json' },
 })
 
@@ -15,7 +15,14 @@ export const setAuthToken = (token: string | null) => {
 
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(error)
+  (error: AxiosError) => {
+    if (error.response?.status === 401 && typeof window !== 'undefined') {
+      localStorage.removeItem('auth-storage')
+      setAuthToken(null)
+      window.location.href = '/login'
+    }
+    return Promise.reject(error)
+  },
 )
 
 export default apiClient
