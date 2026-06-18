@@ -36,6 +36,11 @@ export class EventsController {
     return this.eventsService.getStats(user.organizationId)
   }
 
+  @Get('mine')
+  findMine(@CurrentUser() user: JwtUser) {
+    return this.eventsService.findMine(user._id, user.organizationId)
+  }
+
   @Get()
   findAll(@CurrentUser() user: JwtUser) {
     return this.eventsService.findAllPublished(user.organizationId)

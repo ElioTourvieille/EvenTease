@@ -43,4 +43,13 @@ export class OrganizationsService {
   async findById(id: string): Promise<OrganizationDocument | null> {
     return this.organizationModel.findById(id).exec()
   }
+
+  async regenerateInviteCode(orgId: string): Promise<OrganizationDocument> {
+    const newCode = await this.generateUniqueInviteCode()
+    const updated = await this.organizationModel
+      .findByIdAndUpdate(orgId, { inviteCode: newCode }, { new: true })
+      .exec()
+    if (!updated) throw new Error('Organisation introuvable')
+    return updated
+  }
 }

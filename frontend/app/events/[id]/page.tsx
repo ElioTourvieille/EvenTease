@@ -92,7 +92,7 @@ export default function EventDetailPage() {
         {/* Retour */}
         <button
           onClick={() => router.back()}
-          className="mb-6 flex items-center gap-1.5 text-sm font-medium text-[#414754] hover:text-[#005ab6]"
+          className="mb-6 flex items-center gap-1.5 cursor-pointer text-sm font-medium text-[#414754] hover:text-[#005ab6]"
         >
           <ArrowLeft className="h-4 w-4" />
           Retour

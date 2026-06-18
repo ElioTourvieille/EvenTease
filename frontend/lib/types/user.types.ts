@@ -8,4 +8,5 @@ export interface User {
   organizationId: string
   role: UserRole
   token: string
+  createdAt?: string
 }

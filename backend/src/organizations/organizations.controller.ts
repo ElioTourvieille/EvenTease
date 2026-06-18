@@ -1,14 +1,26 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common'
+import { Controller, Get, Param, Patch } from '@nestjs/common'
 import { OrganizationsService } from './organizations.service'
-import { JwtAuthGuard } from '../common/guards/jwt-auth.guard'
-import { RolesGuard } from '../common/guards/roles.guard'
+import { CurrentUser } from '../common/decorators/current-user.decorator'
 import { Roles } from '../common/decorators/roles.decorator'
 import { UserRole } from '../common/types/roles.enum'
+import type { JwtUser } from '../auth/strategies/jwt.strategy'
 
 @Controller('organizations')
-@UseGuards(JwtAuthGuard, RolesGuard)
 export class OrganizationsController {
   constructor(private readonly organizationsService: OrganizationsService) {}
+
+  // Route statique avant /:id
+  @Get('me')
+  @Roles(UserRole.OWNER, UserRole.ADMIN)
+  findMine(@CurrentUser() user: JwtUser) {
+    return this.organizationsService.findById(user.organizationId)
+  }
+
+  @Patch('invite-code')
+  @Roles(UserRole.OWNER)
+  regenerateInviteCode(@CurrentUser() user: JwtUser) {
+    return this.organizationsService.regenerateInviteCode(user.organizationId)
+  }
 
   @Get(':id')
   @Roles(UserRole.OWNER)

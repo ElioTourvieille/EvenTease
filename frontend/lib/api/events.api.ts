@@ -49,8 +49,18 @@ export const eventsApi = {
     await apiClient.delete(`/events/${id}/unsubscribe`)
   },
 
-  getStats: async (): Promise<{ pending: number; published: number; total: number }> => {
-    const res = await apiClient.get<{ pending: number; published: number; total: number }>('/events/stats')
+  getMine: async (): Promise<Event[]> => {
+    const res = await apiClient.get<Event[]>('/events/mine')
+    return res.data
+  },
+
+  getPending: async (): Promise<Event[]> => {
+    const res = await apiClient.get<Event[]>('/events/pending')
+    return res.data
+  },
+
+  getStats: async (): Promise<{ eventCount: number; userCount: number; pendingCount: number; participationRate: number }> => {
+    const res = await apiClient.get<{ eventCount: number; userCount: number; pendingCount: number; participationRate: number }>('/events/stats')
     return res.data
   },
 }

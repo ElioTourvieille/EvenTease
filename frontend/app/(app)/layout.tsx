@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useAuthStore } from '@/lib/store/auth.store'
-import NavBar from '@/components/layout/NavBar'
+import SideBar from '@/components/layout/SideBar'
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const [hydrated, setHydrated] = useState(false)
@@ -19,9 +19,9 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   if (!hydrated || !user) return null
 
   return (
-    <div className="flex min-h-screen flex-col bg-[#f5f5f5]">
-      <NavBar />
-      <main className="flex-1">{children}</main>
+    <div className="flex h-screen overflow-hidden bg-[#fcf9f8]">
+      <SideBar />
+      <main className="flex-1 overflow-y-auto">{children}</main>
     </div>
   )
 }

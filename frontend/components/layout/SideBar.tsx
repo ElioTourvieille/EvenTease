@@ -7,6 +7,7 @@ import {
   LayoutGrid,
   Home,
   Calendar,
+  CalendarDays,
   User,
   BookOpen,
   Users,
@@ -29,6 +30,7 @@ interface NavItem {
 
 const NAV_ITEMS: NavItem[] = [
   { href: '/dashboard', label: 'Accueil', icon: Home },
+  { href: '/main', label: 'Événements', icon: CalendarDays },
   { href: '/calendar', label: 'Calendrier', icon: Calendar },
   { href: '/profile', label: 'Mon Profil', icon: User },
   { href: '/myevents', label: 'Mes Events', icon: BookOpen },

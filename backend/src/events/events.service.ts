@@ -15,6 +15,7 @@ export interface EventStats {
   eventCount: number
   userCount: number
   pendingCount: number
+  participationRate: number
 }
 
 @Injectable()
@@ -51,14 +52,14 @@ export class EventsService {
 
   async findAllPublished(orgId: string): Promise<EventDocument[]> {
     return this.eventModel
-      .find({ organizationId: orgId, status: 'published' })
+      .find({ organizationId: new Types.ObjectId(orgId), status: 'published' })
       .sort({ date: 1 })
       .exec()
   }
 
   async findPending(orgId: string): Promise<EventDocument[]> {
     return this.eventModel
-      .find({ organizationId: orgId, status: 'pending' })
+      .find({ organizationId: new Types.ObjectId(orgId), status: 'pending' })
       .sort({ createdAt: -1 })
       .exec()
   }
@@ -146,16 +147,40 @@ export class EventsService {
     return updated
   }
 
+  async findMine(userId: string, orgId: string): Promise<EventDocument[]> {
+    return this.eventModel
+      .find({
+        organizationId: new Types.ObjectId(orgId),
+        createdBy: new Types.ObjectId(userId),
+      })
+      .sort({ createdAt: -1 })
+      .exec()
+  }
+
   async getStats(orgId: string): Promise<EventStats> {
-    const results = await Promise.all([
-      this.eventModel.countDocuments({ organizationId: orgId, status: 'published' }),
-      this.userModel.countDocuments({ organizationId: orgId }),
-      this.eventModel.countDocuments({ organizationId: orgId, status: 'pending' }),
+    const orgObjectId = new Types.ObjectId(orgId)
+    const [eventCount, userCount, pendingCount, publishedEvents] = await Promise.all([
+      this.eventModel.countDocuments({ organizationId: orgObjectId, status: 'published' }),
+      this.userModel.countDocuments({ organizationId: orgObjectId }),
+      this.eventModel.countDocuments({ organizationId: orgObjectId, status: 'pending' }),
+      this.eventModel.find({ organizationId: orgObjectId, status: 'published' }, 'participants').lean(),
     ])
+
+    const totalParticipations = publishedEvents.reduce(
+      (acc, e) => acc + (e['participants'] as unknown[]).length,
+      0,
+    )
+    const maxParticipations = (eventCount ?? 0) * (userCount ?? 0)
+    const participationRate =
+      maxParticipations > 0
+        ? Math.round((totalParticipations / maxParticipations) * 100)
+        : 0
+
     return {
-      eventCount: results[0] ?? 0,
-      userCount: results[1] ?? 0,
-      pendingCount: results[2] ?? 0,
+      eventCount: eventCount ?? 0,
+      userCount: userCount ?? 0,
+      pendingCount: pendingCount ?? 0,
+      participationRate,
     }
   }
 }
