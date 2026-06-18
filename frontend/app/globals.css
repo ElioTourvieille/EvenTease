@@ -116,14 +116,44 @@
     --sidebar-ring: oklch(0.556 0 0);
 }
 
+/* ── EvenTease brand overrides ───────────────────────────────────────── */
+:root {
+  /* Azure Blue primary */
+  --primary: oklch(0.42 0.18 257);
+  --primary-foreground: oklch(1 0 0);
+  /* Smoke Gray background */
+  --background: oklch(0.987 0.004 60);
+  --foreground: oklch(0.145 0 0);
+  /* Outline palette */
+  --border: oklch(0.87 0.01 270);
+  --input: oklch(0.87 0.01 270);
+  --ring: oklch(0.42 0.18 257);
+  /* Sidebar uses same surface */
+  --sidebar: oklch(1 0 0);
+  --sidebar-primary: oklch(0.42 0.18 257);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  /* Brand gradient (used via inline style or CSS) */
+  --brand-gradient: linear-gradient(135deg, #0080ff, #e02aff);
+  /* Brand raw colors (useful for arbitrary Tailwind values) */
+  --brand-blue: #005ab6;
+  --brand-from: #0080ff;
+  --brand-to: #e02aff;
+  --brand-surface: #fcf9f8;
+  --brand-text: #1c1b1b;
+  --brand-text-dim: #414754;
+  --brand-outline: #717786;
+  --brand-outline-light: #c1c6d7;
+  --brand-error: #ba1a1a;
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
-    }
+  }
   body {
     @apply bg-background text-foreground;
-    }
+  }
   html {
     @apply font-sans;
-    }
+  }
 }
