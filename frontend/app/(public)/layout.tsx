@@ -1,12 +1,5 @@
-import Header from '@/components/layout/Header'
-import Footer from '@/components/layout/Footer'
-
+// Les pages auth (login, register) sont full-screen et gèrent leur propre chrome.
+// La landing page (/) inclura Header + Footer directement dans son contenu.
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex min-h-screen flex-col bg-[#fcf9f8]">
-      <Header />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </div>
-  )
+  return <>{children}</>
 }
