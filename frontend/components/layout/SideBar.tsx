@@ -130,7 +130,7 @@ export default function SideBar() {
 
         <button
           onClick={handleLogout}
-          className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-[#ba1a1a] transition-colors hover:bg-red-50"
+          className="flex w-full items-center gap-3 cursor-pointer rounded-lg px-3 py-2.5 text-sm font-medium text-[#ba1a1a] transition-colors hover:bg-red-50"
         >
           <LogOut className="h-[18px] w-[18px]" />
           Se déconnecter

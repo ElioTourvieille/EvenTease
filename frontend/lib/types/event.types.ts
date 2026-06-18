@@ -21,5 +21,5 @@ export interface Event {
 }
 
 export type CreateEventDto = Omit<Event,
-  '_id' | 'participants' | 'status' | 'createdAt' | 'createdBy'
+  '_id' | 'participants' | 'status' | 'createdAt' | 'createdBy' | 'organizationId'
 >

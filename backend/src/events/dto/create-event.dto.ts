@@ -1,4 +1,4 @@
-import { IsEnum, IsString, MinLength } from 'class-validator'
+import { IsEnum, IsOptional, IsString, MinLength } from 'class-validator'
 import type { EventType, EventAccess } from '../schemas/event.schema'
 
 export class CreateEventDto {
@@ -23,4 +23,8 @@ export class CreateEventDto {
 
   @IsString()
   description!: string
+
+  @IsOptional()
+  @IsString()
+  image?: string
 }

@@ -22,7 +22,7 @@ const schema = z.object({
   password:   z.string().min(8, 'Au moins 8 caractères'),
   orgName:    z.string().min(2, 'Au moins 2 caractères'),
   orgType:    z.enum(['Entreprise', 'Association', 'Autres'], {
-    errorMap: () => ({ message: 'Sélectionnez un type' }),
+    message: 'Sélectionnez un type',
   }),
 })
 
