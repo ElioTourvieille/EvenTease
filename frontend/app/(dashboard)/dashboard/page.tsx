@@ -2,12 +2,13 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { Users, CalendarDays, Clock, TrendingUp, ArrowRight } from 'lucide-react'
+import { Users, CalendarDays, Clock, TrendingUp, Archive, ArrowRight } from 'lucide-react'
 import { eventsApi } from '@/lib/api/events.api'
 import { useAuthStore } from '@/lib/store/auth.store'
 
 interface Stats {
   eventCount: number
+  archivedCount: number
   userCount: number
   pendingCount: number
   participationRate: number
@@ -56,8 +57,8 @@ export default function DashboardPage() {
   if (loading) {
     return (
       <div className="min-h-screen bg-[#fcf9f8] p-10">
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {Array.from({ length: 4 }).map((_, i) => (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
+          {Array.from({ length: 5 }).map((_, i) => (
             <div key={i} className="h-40 animate-pulse rounded-2xl bg-gray-200" />
           ))}
         </div>
@@ -81,7 +82,7 @@ export default function DashboardPage() {
 
         {/* Stat cards */}
         {isManager && stats ? (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-5">
             <StatCard
               gradient
               icon={<Users className="h-5 w-5" />}
@@ -90,7 +91,7 @@ export default function DashboardPage() {
             />
             <StatCard
               icon={<CalendarDays className="h-5 w-5" />}
-              label="Événements publiés"
+              label="Événements à venir"
               value={stats.eventCount}
             />
             <StatCard
@@ -110,6 +111,11 @@ export default function DashboardPage() {
                   <span className="text-xs text-[#717786]">Aucun en attente</span>
                 )
               }
+            />
+            <StatCard
+              icon={<Archive className="h-5 w-5" />}
+              label="Événements archivés"
+              value={stats.archivedCount}
             />
             <StatCard
               icon={<TrendingUp className="h-5 w-5" />}

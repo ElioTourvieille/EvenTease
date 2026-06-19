@@ -41,9 +41,14 @@ export class EventsController {
     return this.eventsService.findMine(user._id, user.organizationId)
   }
 
+  @Get('archived')
+  findArchived(@CurrentUser() user: JwtUser) {
+    return this.eventsService.findAllArchived(user.organizationId)
+  }
+
   @Get()
   findAll(@CurrentUser() user: JwtUser) {
-    return this.eventsService.findAllPublished(user.organizationId)
+    return this.eventsService.findAllUpcoming(user.organizationId)
   }
 
   @Get(':id')

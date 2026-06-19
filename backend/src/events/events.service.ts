@@ -13,6 +13,7 @@ import { UpdateEventDto } from './dto/update-event.dto'
 
 export interface EventStats {
   eventCount: number
+  archivedCount: number
   userCount: number
   pendingCount: number
   participationRate: number
@@ -50,10 +51,19 @@ export class EventsService {
     })
   }
 
-  async findAllPublished(orgId: string): Promise<EventDocument[]> {
+  async findAllUpcoming(orgId: string): Promise<EventDocument[]> {
+    const today = new Date().toISOString().slice(0, 10)
     return this.eventModel
-      .find({ organizationId: new Types.ObjectId(orgId), status: 'published' })
+      .find({ organizationId: new Types.ObjectId(orgId), status: 'published', date: { $gte: today } })
       .sort({ date: 1 })
+      .exec()
+  }
+
+  async findAllArchived(orgId: string): Promise<EventDocument[]> {
+    const today = new Date().toISOString().slice(0, 10)
+    return this.eventModel
+      .find({ organizationId: new Types.ObjectId(orgId), status: 'published', date: { $lt: today } })
+      .sort({ date: -1 })
       .exec()
   }
 
@@ -159,8 +169,11 @@ export class EventsService {
 
   async getStats(orgId: string): Promise<EventStats> {
     const orgObjectId = new Types.ObjectId(orgId)
-    const [eventCount, userCount, pendingCount, publishedEvents] = await Promise.all([
-      this.eventModel.countDocuments({ organizationId: orgObjectId, status: 'published' }),
+    const today = new Date().toISOString().slice(0, 10)
+
+    const [eventCount, archivedCount, userCount, pendingCount, publishedEvents] = await Promise.all([
+      this.eventModel.countDocuments({ organizationId: orgObjectId, status: 'published', date: { $gte: today } }),
+      this.eventModel.countDocuments({ organizationId: orgObjectId, status: 'published', date: { $lt: today } }),
       this.userModel.countDocuments({ organizationId: orgObjectId }),
       this.eventModel.countDocuments({ organizationId: orgObjectId, status: 'pending' }),
       this.eventModel.find({ organizationId: orgObjectId, status: 'published' }, 'participants').lean(),
@@ -170,7 +183,8 @@ export class EventsService {
       (acc, e) => acc + (e['participants'] as unknown[]).length,
       0,
     )
-    const maxParticipations = (eventCount ?? 0) * (userCount ?? 0)
+    const allPublished = (eventCount ?? 0) + (archivedCount ?? 0)
+    const maxParticipations = allPublished * (userCount ?? 0)
     const participationRate =
       maxParticipations > 0
         ? Math.round((totalParticipations / maxParticipations) * 100)
@@ -178,6 +192,7 @@ export class EventsService {
 
     return {
       eventCount: eventCount ?? 0,
+      archivedCount: archivedCount ?? 0,
       userCount: userCount ?? 0,
       pendingCount: pendingCount ?? 0,
       participationRate,

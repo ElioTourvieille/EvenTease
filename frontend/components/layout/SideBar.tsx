@@ -10,6 +10,7 @@ import {
   CalendarDays,
   User,
   BookOpen,
+  Archive,
   Users,
   Settings,
   LogOut,
@@ -34,6 +35,7 @@ const NAV_ITEMS: NavItem[] = [
   { href: '/calendar', label: 'Calendrier', icon: Calendar },
   { href: '/profile', label: 'Mon Profil', icon: User },
   { href: '/myevents', label: 'Mes Events', icon: BookOpen },
+  { href: '/archive', label: 'Archives', icon: Archive },
   { href: '/members', label: 'Membres', icon: Users, adminOnly: true },
   { href: '/settings', label: 'Paramètres', icon: Settings, adminOnly: true },
 ]

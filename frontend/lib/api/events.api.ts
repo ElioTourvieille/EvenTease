@@ -59,8 +59,13 @@ export const eventsApi = {
     return res.data
   },
 
-  getStats: async (): Promise<{ eventCount: number; userCount: number; pendingCount: number; participationRate: number }> => {
-    const res = await apiClient.get<{ eventCount: number; userCount: number; pendingCount: number; participationRate: number }>('/events/stats')
+  getArchived: async (): Promise<Event[]> => {
+    const res = await apiClient.get<Event[]>('/events/archived')
+    return res.data
+  },
+
+  getStats: async (): Promise<{ eventCount: number; archivedCount: number; userCount: number; pendingCount: number; participationRate: number }> => {
+    const res = await apiClient.get<{ eventCount: number; archivedCount: number; userCount: number; pendingCount: number; participationRate: number }>('/events/stats')
     return res.data
   },
 }
