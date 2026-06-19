@@ -285,23 +285,34 @@ function MockNotifications() {
 }
 
 function MockBarChart() {
-  const bars = [60, 85, 45, 92, 70, 55, 78]
+  const bars   = [60, 85, 45, 92, 70, 55, 78]
   const labels = ['L', 'M', 'M', 'J', 'V', 'S', 'D']
+  const maxPx  = 88
+
   return (
-    <div className="flex h-28 items-end gap-2">
-      {bars.map((h, i) => (
-        <div key={i} className="flex flex-1 flex-col items-center gap-1">
+    <div className="flex flex-col gap-1">
+      <div className="flex items-end gap-1.5" style={{ height: maxPx }}>
+        {bars.map((h, i) => (
           <motion.div
+            key={i}
             initial={{ scaleY: 0 }}
             whileInView={{ scaleY: 1 }}
             viewport={{ once: true }}
-            transition={{ duration: 0.5, delay: i * 0.07, ease: [0.22, 1, 0.36, 1] }}
-            style={{ height: `${h}%`, background: i === 3 ? 'var(--brand-gradient)' : undefined, transformOrigin: 'bottom' }}
-            className={`w-full rounded-t-md ${i === 3 ? '' : 'bg-[#c1c6d7]'}`}
+            transition={{ duration: 0.5, delay: i * 0.07, ease: 'easeOut' }}
+            style={{
+              height: Math.round((h / 100) * maxPx),
+              background: i === 3 ? 'var(--brand-gradient)' : undefined,
+              transformOrigin: 'bottom',
+            }}
+            className={`flex-1 rounded-t-md ${i === 3 ? '' : 'bg-[#c1c6d7]'}`}
           />
-          <span className="text-[10px] text-[#717786]">{labels[i]}</span>
-        </div>
-      ))}
+        ))}
+      </div>
+      <div className="flex gap-1.5">
+        {labels.map((l, i) => (
+          <span key={i} className="flex-1 text-center text-[10px] text-[#717786]">{l}</span>
+        ))}
+      </div>
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common'
 import { APP_GUARD } from '@nestjs/core'
 import { ConfigModule, ConfigService } from '@nestjs/config'
 import { MongooseModule } from '@nestjs/mongoose'
+import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler'
 import { OrganizationsModule } from './organizations/organizations.module'
 import { AuthModule } from './auth/auth.module'
 import { EventsModule } from './events/events.module'
@@ -22,6 +23,9 @@ import { RolesGuard } from './common/guards/roles.guard'
       }),
       inject: [ConfigService],
     }),
+    ThrottlerModule.forRoot([
+      { name: 'default', ttl: 60_000, limit: 100 },
+    ]),
     OrganizationsModule,
     AuthModule,
     EventsModule,
@@ -29,6 +33,7 @@ import { RolesGuard } from './common/guards/roles.guard'
     UploadsModule,
   ],
   providers: [
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
