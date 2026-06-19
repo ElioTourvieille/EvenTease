@@ -11,7 +11,7 @@ export class OrganizationsController {
 
   // Route statique avant /:id
   @Get('me')
-  @Roles(UserRole.OWNER, UserRole.ADMIN)
+  @Roles(UserRole.OWNER, UserRole.ADMIN, UserRole.MEMBER)
   findMine(@CurrentUser() user: JwtUser) {
     return this.organizationsService.findById(user.organizationId)
   }
